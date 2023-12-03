@@ -5,37 +5,47 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style type="text/css">
+        @import url("https://fonts.googleapis.com/css?family=Zilla Slab:400,500,700");
+
         body {
             text-align: center;
             background: rgb(100, 100, 100);
             padding-left: 3vw;
             padding-right: 3vw;
+            font-family: 'Zilla Slab';
         }
 
         img {
             width: 1024px;
+            border-radius: 0.2em;
         }
 
         a {
             color: orange;
         }
 
+        input,
+        button {
+            margin: 3px;
+            padding: 0.5em;
+            background: #111;
+            color: #eee;
+            border-radius: 0.4em;
+            border: 1px solid #eee;
+        }
+
         a:visited {
             color: rgb(198, 109, 0);
         }
 
-        .yyImage {
-            border-radius: 2px;
-        }
-
         #badImage {
             border: 5px solid black;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
         }
 
         #goodImage {
             border: 5px solid white;
-            background: rgba(255,255,255,0.5);
+            background: rgba(255, 255, 255, 0.5);
         }
 
         #sourceDiv {
@@ -80,28 +90,43 @@
 </head>
 
 <body>
-    <h1 style="margin: 5vh 0 5vh 0;">🖼️☯️</h1>
+    <h3 style="margin: 5vh 0 5vh 0;">
+        <img src="https://avatars.githubusercontent.com/u/153049230?s=320&v=4" style="width: 100px; border-radius: 0.3em;" />
+        <br/>
+        Discover the <br/>yin &amp; yang</span> <br/>of an image
+    </h3>
 
-    <img id="sourceImage"
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Master_of_the_Fertility_of_the_Egg_-_Curious_scene_with_animals_and_other_fantastical_beasts_making_music%2C_conversing%2C_or_attacking_each_other_from_flying_baskets%2C_as_well_as_a_dancing_skeleto.jpg/980px-thumbnail.jpg" />
+    <a id="yinyangUrlRO" href=""><img id="sourceImage" src="" /></a>
     <div id="inputDiv">
-        <input id="yinyangUrl" type="text"
-            value="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Master_of_the_Fertility_of_the_Egg_-_Curious_scene_with_animals_and_other_fantastical_beasts_making_music%2C_conversing%2C_or_attacking_each_other_from_flying_baskets%2C_as_well_as_a_dancing_skeleto.jpg/980px-thumbnail.jpg"
-            size="32" />
+        <input id="yinyangUrl" type="text" value="" size="32" />
         <br />
         <div>
+            <span style="font-size: 9pt; font-style: italic;">
+                <span>
+                    <span id="sklCont">
+                        <input type="checkbox" id="storeKeyLocally" /> save key <b>
+                            <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage"
+                                target="_blank">locally</a></b> for easy reuse.
+                    </span>
+                </span>
+            </span>
+            <br />
             <input id="openaiKey" type="text" size="32" placeholder="Your OpenAI key..." />
             <br />
-            <span style="font-size: 8pt; font-style: italic;">used only for this request; never logged or stored.
-                <a href="https://github.com/edfletcher/yinyang/blob/main/src/index.ts" target="_blank">see for yourself.</a>
-                <br />creating a new key and revoking it when done here is good hygine regardless.</span>
+            <span style="font-size: 8pt; font-style: italic;">
+                never logged or stored server-side:
+                <a href="https://github.com/image-yinyang/public/blob/0b1627e3f931bb809b521537472802b2ffbf3ac0/src/index.js#L38-L49" target="_blank">see for
+                    yourself.</a>
+            </span>
         </div>
-        <br />
-        <label for="thresMod" id="thresModLabel">neutral</label>
-        <br />
-        <input type="range" id="thresMod" name="thresMod" min="-3" max="3" value="0" step="1" />
-        <br />
-        <button id="yinyang" disabled="true">🖼️☯️</button>
+        <div style="margin-top: 2vh;">
+            <label for="thresMod" id="thresModLabel">neutral</label>
+            <br />
+            <input type="range" id="thresMod" name="thresMod" min="-3" max="3" value="0" step="1" />
+            <br />
+            <button id="yinyang" disabled="true">🖼️☯️</button>
+            <div id="metadata"></div>
+        </div>
     </div>
 
     <div id="sourceDiv">
@@ -124,12 +149,25 @@
         <a href="https://developers.cloudflare.com/workers-ai/models/text-classification/" target="_blank">text
             classification</a> &amp;
         <a href="https://developers.cloudflare.com/workers-ai/models/text-to-image/" target="_blank">text-to-image</a>.
-        <br/>
-        an <a href="https://github.com/edfletcher" target="_blank">ed fletcher</a> joint.
+        <br />
+        <a href="https://github.com/edfletcher/yinyang/" target="_blank">an</a>
+        <a href="https://github.com/edfletcher" target="_blank">ed fletcher</a> joint.
     </div>
+    <div id="reqId" style="font-size: 80%; color: #888888;"></div>
 </body>
 
 <script>
+    const GOOD_STARTS = [
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Cloud_cumulonimbus_at_baltic_sea%281%29.jpg/1280px-Cloud_cumulonimbus_at_baltic_sea%281%29.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Master_of_the_Fertility_of_the_Egg_-_Curious_scene_with_animals_and_other_fantastical_beasts_making_music%2C_conversing%2C_or_attacking_each_other_from_flying_baskets%2C_as_well_as_a_dancing_skeleto.jpg/980px-thumbnail.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Vancouver_Folly_coal_harbour.jpg/1024px-Vancouver_Folly_coal_harbour.jpg',
+        'https://www.renemagritte.org/images/paintings/personal-values.jpg',
+        'https://uploads6.wikiart.org/images/salvador-dali/the-persistence-of-memory-1931.jpg!Large.jpg',
+        'https://pbs.twimg.com/media/GAYtq5-WcAEzvhS?format=jpg&name=medium',
+        'https://pbs.twimg.com/media/GAZS-oRXIAAfy-v?format=jpg&name=900x900',
+        'https://pbs.twimg.com/media/GAZQbk1aEAA129Y?format=jpg&name=medium',
+    ];
+
     const MOD_LABELS = [
         'negativest',
         'negativer',
@@ -140,9 +178,45 @@
         'positivest'
     ];
 
-    document.getElementById('yinyangUrl').addEventListener('change', (e) => {
-        document.getElementById('sourceImage').src = e.target.value;
+    const API_HOST = 'api.yinyang.computerpho.be';
+    const IMG_HOST = 'images.yinyang.computerpho.be';
+
+    document.addEventListener('DOMContentLoaded', (e) => {
+        const startUrl = GOOD_STARTS[Math.floor(Math.random() * GOOD_STARTS.length)];
+        document.getElementById('yinyangUrl').value = document.getElementById('sourceImage').src = startUrl;
+        document.getElementById('yinyangUrlRO').href = startUrl;
+
+        if (window.localStorage.getItem('openaiKey')) {
+            const oaiKeyEle = document.getElementById('openaiKey');
+            oaiKeyEle.value = window.localStorage.getItem('openaiKey');
+            oaiKeyEle.disabled = true;
+            const sklEle = document.getElementById('storeKeyLocally');
+            sklEle.checked = true;
+            sklEle.disabled = true;
+            const sklCont = document.getElementById('sklCont');
+            const rmBut = document.createElement('a');
+            rmBut.addEventListener('click', (e) => {
+                window.localStorage.removeItem('openaiKey');
+                sklEle.checked = false;
+                sklEle.disabled = false;
+                oaiKeyEle.value = '';
+                oaiKeyEle.disabled = false;
+                rmBut.parentElement.removeChild(rmBut);
+            });
+            rmBut.innerText = 'Clear stored key.';
+            rmBut.href = '';
+            sklCont.appendChild(rmBut);
+            document.getElementById('yinyang').disabled = false;
+        }
     });
+
+    function onUrlChange(e) {
+        document.getElementById('sourceImage').src = e.target.value;
+    }
+
+    document.getElementById('yinyangUrl').addEventListener('change', onUrlChange);
+
+    document.getElementById('yinyangUrl').addEventListener('focus', (e) => { e.target.select(); });
 
     document.getElementById('openaiKey').addEventListener('change', (e) => {
         if ((e.target.value.length === 51 && e.target.value.indexOf('sk-') === 0) || e.target.value.length === 64) {
@@ -156,28 +230,38 @@
 
     document.getElementById('yinyang').addEventListener('click', async () => {
         document.getElementById('yinyang').parentElement.removeChild(document.getElementById('yinyang'));
-        document.getElementById('yinyangUrl').disabled = true;
-        const imageUrl = document.getElementById('yinyangUrl').value;
+        const urlEle = document.getElementById('yinyangUrl');
+        urlEle.removeEventListener('change', onUrlChange)
+        const imageUrl = urlEle.value;
+        document.getElementById('yinyangUrlRO').href = imageUrl;
         const sourceDiv = document.getElementById('sourceDiv');
         sourceDiv.style.display = 'block';
         sourceDiv.style.visibility = 'visible';
         document.getElementById('thresMod').disabled = true;
         const oaiKeyEle = document.getElementById('openaiKey');
         const openaiKey = oaiKeyEle.value;
+        if (document.getElementById('storeKeyLocally').checked) {
+            window.localStorage.setItem('openaiKey', openaiKey);
+        }
+
         oaiKeyEle.parentElement.parentElement.removeChild(oaiKeyEle.parentElement);
 
         document.getElementById('sourceImage').src = imageUrl;
         document.title = '⏳  🖼️☯️';
-        const result = await fetch(`https://yinyang.llamas.computerpho.be/?imageUrl=${encodeURI(imageUrl)}`, {
+        const result = await fetch(`https://${API_HOST}/`, {
+            method: 'POST',
+            body: imageUrl,
             headers: {
                 'X-Yinyang-OpenAI-Key': openaiKey,
                 'X-Yinyang-Threshold-Mod': document.getElementById('thresMod').value,
             }
         });
-        document.title = '🖼️☯️';
-        const { response, sentences, results: { good, bad }, meta } = await result.json();
-        console.log(response, sentences, good, bad, meta);
-
+        if (result.status > 299) {
+            document.getElementById('metadata').innerText = `Request failed! Please try again soon`;
+            document.getElementById('goodImage').src = document.getElementById('badImage').src = '';
+            return;
+        }
+        const { requestId, response, sentences, results: { good, bad }, meta } = await result.json();
         const imageDesc = document.getElementById('imageDesc');
         sentences.forEach(({ sentence, sentiment: { good } }) => {
             const ele = document.createElement('span');
@@ -185,13 +269,26 @@
             ele.innerText = sentence + '.';
             imageDesc.appendChild(ele);
         });
-
-        document.getElementById('goodImage').src = `data:image/png;base64,${good.imageBase64}`;
         document.getElementById('goodPrompt').innerText = good.prompt;
-
-        document.getElementById('badImage').src = `data:image/png;base64,${bad.imageBase64}`;
         document.getElementById('badPrompt').innerText = bad.prompt;
-    })
+        document.getElementById('metadata').innerText = `OpenAI tokens used: ${meta.openai_tokens_used}`;
+        document.getElementById('reqId').innerText = `request ID: ${requestId}`;
+
+        reqBottomHalf(requestId);
+    });
+
+    async function reqBottomHalf(requestId) {
+        const result = await fetch(`https://${API_HOST}/${requestId}`);
+        if (result.status === 202) {
+            setTimeout(() => reqBottomHalf(requestId), 3000);
+            return;
+        }
+
+        document.title = '🖼️☯️';
+        const { results: { good, bad } } = await result.json();
+        document.getElementById('goodImage').src = `https://${IMG_HOST}/${good.imageBucketId}`;
+        document.getElementById('badImage').src = `https://${IMG_HOST}/${bad.imageBucketId}`;
+    }
 </script>
 <script data-goatcounter="https://yinyang.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
