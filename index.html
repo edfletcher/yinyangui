@@ -96,10 +96,10 @@
         Discover the <br/>yin &amp; yang</span> <br/>of an image
     </h3>
 
+    <input id="yinyangUrl" type="text" value="" size="32" placeholder="Image URL..."/>
+    <br/>
     <a id="yinyangUrlRO" href=""><img id="sourceImage" src="" /></a>
     <div id="inputDiv">
-        <input id="yinyangUrl" type="text" value="" size="32" />
-        <br />
         <div>
             <span style="font-size: 9pt; font-style: italic;">
                 <span>
@@ -111,7 +111,7 @@
                 </span>
             </span>
             <br />
-            <input id="openaiKey" type="text" size="32" placeholder="Your OpenAI key..." />
+            <input id="openaiKey" type="text" size="32" placeholder="OpenAI key..." />
             <br />
             <span style="font-size: 8pt; font-style: italic;">
                 never logged or stored server-side:
@@ -157,17 +157,6 @@
 </body>
 
 <script>
-    const GOOD_STARTS = [
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Cloud_cumulonimbus_at_baltic_sea%281%29.jpg/1280px-Cloud_cumulonimbus_at_baltic_sea%281%29.jpg',
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Master_of_the_Fertility_of_the_Egg_-_Curious_scene_with_animals_and_other_fantastical_beasts_making_music%2C_conversing%2C_or_attacking_each_other_from_flying_baskets%2C_as_well_as_a_dancing_skeleto.jpg/980px-thumbnail.jpg',
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Vancouver_Folly_coal_harbour.jpg/1024px-Vancouver_Folly_coal_harbour.jpg',
-        'https://www.renemagritte.org/images/paintings/personal-values.jpg',
-        'https://uploads6.wikiart.org/images/salvador-dali/the-persistence-of-memory-1931.jpg!Large.jpg',
-        'https://pbs.twimg.com/media/GAYtq5-WcAEzvhS?format=jpg&name=medium',
-        'https://pbs.twimg.com/media/GAZS-oRXIAAfy-v?format=jpg&name=900x900',
-        'https://pbs.twimg.com/media/GAZQbk1aEAA129Y?format=jpg&name=medium',
-    ];
-
     const MOD_LABELS = [
         'negativest',
         'negativer',
@@ -182,10 +171,6 @@
     const IMG_HOST = 'images.yinyang.computerpho.be';
 
     document.addEventListener('DOMContentLoaded', (e) => {
-        const startUrl = GOOD_STARTS[Math.floor(Math.random() * GOOD_STARTS.length)];
-        document.getElementById('yinyangUrl').value = document.getElementById('sourceImage').src = startUrl;
-        document.getElementById('yinyangUrlRO').href = startUrl;
-
         if (window.localStorage.getItem('openaiKey')) {
             const oaiKeyEle = document.getElementById('openaiKey');
             oaiKeyEle.value = window.localStorage.getItem('openaiKey');
