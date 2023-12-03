@@ -195,12 +195,6 @@
         }
     });
 
-    function onUrlChange(e) {
-        document.getElementById('sourceImage').src = e.target.value;
-    }
-
-    document.getElementById('yinyangUrl').addEventListener('change', onUrlChange);
-
     document.getElementById('yinyangUrl').addEventListener('focus', (e) => { e.target.select(); });
 
     document.getElementById('openaiKey').addEventListener('change', (e) => {
@@ -216,8 +210,8 @@
     document.getElementById('yinyang').addEventListener('click', async () => {
         document.getElementById('yinyang').parentElement.removeChild(document.getElementById('yinyang'));
         const urlEle = document.getElementById('yinyangUrl');
-        urlEle.removeEventListener('change', onUrlChange)
         const imageUrl = urlEle.value;
+        document.getElementById('sourceImage').src = imageUrl;
         document.getElementById('yinyangUrlRO').href = imageUrl;
         const sourceDiv = document.getElementById('sourceDiv');
         sourceDiv.style.display = 'block';
