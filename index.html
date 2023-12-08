@@ -64,6 +64,10 @@
             border-top: 2px dotted rgb(200, 200, 200);
         }
 
+        #footer {
+            font-size: 75%;
+        }
+
         #imageDesc span {
             padding-right: 0.2em;
         }
@@ -93,12 +97,11 @@
     <h3 style="margin: 5vh 0 5vh 0;">
         <img src="https://avatars.githubusercontent.com/u/153049230?s=320&v=4" style="width: 100px; border-radius: 0.3em;" />
         <br/>
-        Discover the <br/>yin &amp; yang</span> <br/>of an image
+        Find the <br/>yin &amp; yang</span> <br/>of an image
     </h3>
 
     <input id="yinyangUrl" type="text" value="" size="32" placeholder="Image URL..."/>
     <br/>
-    <a id="yinyangUrlRO" href=""><img id="sourceImage" src="" /></a>
     <div id="inputDiv">
         <div>
             <span style="font-size: 9pt; font-style: italic;">
@@ -127,6 +130,8 @@
             <button id="yinyang" disabled="true">🖼️☯️</button>
             <div id="metadata"></div>
         </div>
+        <br/>
+        <a id="yinyangUrlRO" href=""><img id="sourceImage" src="" /></a>
     </div>
 
     <div id="sourceDiv">
