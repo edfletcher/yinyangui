@@ -94,7 +94,6 @@
             }
         }
     </style>
-    <title>🖼️☯️</title>
 </head>
 
 <body>
@@ -220,7 +219,7 @@
         document.getElementById('sourceImage').src = imageUrl;
         document.title = '⏳  🖼️☯️';
         const url = `https://${API_HOST}/${reqIdParam ?? ''}`
-        const result = await fetch(`https://${API_HOST}/`, {
+        const result = await fetch(url, reqIdParam ? {} : {
             method: 'POST',
             body: imageUrl,
             headers: {
