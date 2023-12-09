@@ -48,7 +48,7 @@ async function loader(reqIdParam, _event) {
     oaiKeyEle.parentElement.parentElement.removeChild(oaiKeyEle.parentElement);
 
     document.getElementById('sourceImage').src = imageUrl;
-    document.title = '⏳  🖼️☯️';
+    document.title = `⏳${document.title}`;
     const url = `https://${API_HOST}/${reqIdParam ?? ''}`
     const result = await fetch(url, reqIdParam ? {} : {
         method: 'POST',
@@ -95,11 +95,12 @@ async function reqBottomHalf(requestId, resultBody) {
         resultBody = await result.json();
     }
 
-    document.title = '🖼️☯️';
+    document.title.replace('⏳', '');
     const { input: { url }, results: { good, bad } } = resultBody;
     document.getElementById('goodImage').src = `https://${IMG_HOST}/${good.imageBucketId}`;
     document.getElementById('badImage').src = `https://${IMG_HOST}/${bad.imageBucketId}`;
     document.getElementById('yinyangUrl').value = url;
+    onUrlChange({ target: { value: url }});
 }
 
 document.getElementById('yinyang').addEventListener('click', loader.bind(null, null));
