@@ -79,7 +79,7 @@ async function loader(reqIdParam, _event) {
     document.getElementById('reqId').style.display = 'block';
     const reqIdLink = document.getElementById('reqIdLink');
     reqIdLink.innerText = requestId;
-    reqIdLink.href = `https://${window.location.origin}/?req=${requestId}`;
+    reqIdLink.href = `${window.location.origin}/?req=${requestId}`;
 
     reqBottomHalf(requestId, resultBody);
 }
