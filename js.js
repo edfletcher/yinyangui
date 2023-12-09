@@ -65,7 +65,13 @@ async function loader(reqIdParam, _event) {
     }
 
     const resultBody = await result.json();
-    const { requestId, response, sentences, results: { good, bad }, meta } = resultBody;
+    const { requestId, sentences, results: { good, bad }, meta } = resultBody;
+
+    if (result.status === 202 && !reqIdParam && requestId) {
+        window.location.search = `?req=${requestId}`;
+        return;
+    }
+
     const imageDesc = document.getElementById('imageDesc');
     sentences.forEach(({ sentence, sentiment: { good } }) => {
         const ele = document.createElement('span');
@@ -76,10 +82,6 @@ async function loader(reqIdParam, _event) {
     document.getElementById('goodPrompt').innerText = good.prompt;
     document.getElementById('badPrompt').innerText = bad.prompt;
     document.getElementById('metadata').innerText = `OpenAI tokens used: ${meta.openai_tokens_used}`;
-    document.getElementById('reqId').style.display = 'block';
-    const reqIdLink = document.getElementById('reqIdLink');
-    reqIdLink.innerText = requestId;
-    reqIdLink.href = `${window.location.origin}/?req=${requestId}`;
 
     reqBottomHalf(requestId, reqIdParam ? resultBody : null);
 }
@@ -101,6 +103,11 @@ async function reqBottomHalf(requestId, resultBody) {
     document.getElementById('badImage').src = `https://${IMG_HOST}/${bad.imageBucketId}`;
     document.getElementById('yinyangUrl').value = url;
     onUrlChange({ target: { value: url } });
+
+    document.getElementById('reqId').style.display = 'block';
+    const reqIdLink = document.getElementById('reqIdLink');
+    reqIdLink.innerText = requestId;
+    reqIdLink.href = `${window.location.origin}/?req=${requestId}`;
 }
 
 document.getElementById('yinyang').addEventListener('click', loader.bind(null, null));
