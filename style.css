@@ -26,6 +26,10 @@ a {
     color: white;
 }
 
+.promptText {
+    margin: 2em;
+}
+
 input,
 button {
     margin: 3px;
