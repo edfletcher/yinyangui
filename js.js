@@ -115,7 +115,6 @@ async function loader(reqIdParam, _event) {
   }
 
   const { requestId } = resultBody;
-  console.log(requestId);
   _updatePrompts(resultBody);
   reqBottomHalf(requestId, reqIdParam ? resultBody : null);
 }
@@ -172,7 +171,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
       oaiKeyEle.disabled = false;
       rmBut.parentElement.removeChild(rmBut);
     });
-    rmBut.innerText = "Clear stored key.";
+    rmBut.innerText = "(Clear stored key)";
     rmBut.href = "";
     sklCont.appendChild(rmBut);
     document.getElementById("yinyang").disabled = false;
