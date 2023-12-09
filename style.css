@@ -3,6 +3,7 @@
 body {
     text-align: center;
     background: #555f6b;
+    color: #222;
     padding-left: 3vw;
     padding-right: 3vw;
     font-family: 'Zilla Slab';
@@ -15,6 +16,14 @@ img {
 
 a {
     color: orange;
+}
+
+.yin {
+    color: black;
+}
+
+.yang {
+    color: white;
 }
 
 input,

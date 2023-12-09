@@ -13,11 +13,11 @@
 </head>
 
 <body>
-    <h3 style="margin: 5vh 0 5vh 0;" id="header">
+    <h3 style="margin: 5vh 0 5vh 0; color: black;" id="header">
         <img src="https://avatars.githubusercontent.com/u/153049230?s=320&v=4"
             style="width: 100px; border-radius: 0.3em;" />
         <br />
-        Find the <br />yin &amp; yang</span> <br />of an image
+        Find the <br /><span class="yin">yin</span> &amp; <span class="yang">yang</span><br />of an image
     </h3>
 
     <input id="yinyangUrl" type="text" value="" size="32" placeholder="Image URL..." />
@@ -61,12 +61,12 @@
 
         <img id="badImage" class="yyImage"
             src="https://cdn.pixabay.com/animation/2022/07/29/03/42/03-42-11-849_512.gif" />
-        <div id="badPrompt"></div>
+        <div id="badPrompt" class="yin"></div>
         <div class="footer"></div>
 
         <img id="goodImage" class="yyImage"
             src="https://cdn.pixabay.com/animation/2022/07/29/03/42/03-42-11-849_512.gif" />
-        <div id="goodPrompt" style="color: white;"></div>
+        <div id="goodPrompt" class="yang"></div>
     </div>
 
     <div id="footer" class="footer">
