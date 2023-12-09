@@ -58,6 +58,7 @@ async function loader(reqIdParam, _event) {
             'X-Yinyang-Threshold-Mod': document.getElementById('thresMod').value,
         }
     });
+
     if (result.status > 299) {
         document.getElementById('metadata').innerText = `Request failed! Please try again soon`;
         document.getElementById('goodImage').src = document.getElementById('badImage').src = '';
@@ -66,11 +67,6 @@ async function loader(reqIdParam, _event) {
 
     const resultBody = await result.json();
     const { requestId, sentences, results: { good, bad }, meta } = resultBody;
-
-    if (result.status === 202 && !reqIdParam && requestId) {
-        window.location.search = `?req=${requestId}`;
-        return;
-    }
 
     const imageDesc = document.getElementById('imageDesc');
     sentences.forEach(({ sentence, sentiment: { good } }) => {
@@ -83,19 +79,22 @@ async function loader(reqIdParam, _event) {
     document.getElementById('badPrompt').innerText = bad.prompt;
     document.getElementById('metadata').innerText = `OpenAI tokens used: ${meta.openai_tokens_used}`;
 
-    reqBottomHalf(requestId, reqIdParam ? resultBody : null);
+    if (!reqIdParam) {
+        window.location.search = `?req=${requestId}`;
+        return;
+    }
+
+    reqBottomHalf(requestId);
 }
 
-async function reqBottomHalf(requestId, resultBody) {
-    if (!resultBody) {
-        const result = await fetch(`https://${API_HOST}/${requestId}`);
-        if (result.status === 202) {
-            setTimeout(() => reqBottomHalf(requestId), 3000);
-            return;
-        }
-
-        resultBody = await result.json();
+async function reqBottomHalf(requestId) {
+    const result = await fetch(`https://${API_HOST}/${requestId}`);
+    if (result.status === 202) {
+        setTimeout(() => reqBottomHalf(requestId), 3000);
+        return;
     }
+
+    const resultBody = await result.json();
 
     document.title = document.title.replace('⏳', '');
     const { input: { url }, results: { good, bad } } = resultBody;
