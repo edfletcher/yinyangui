@@ -65,7 +65,14 @@ async function loader(reqIdParam, _event) {
         return;
     }
 
-    const resultBody = await result.json();
+    let resultBody;
+    try {
+        resultBody = await result.json();
+    } catch (e) {
+        console.error('bad json?');
+        console.error(e);
+        console.error(result);
+    }
     const { requestId, sentences, results: { good, bad }, meta } = resultBody;
 
     const imageDesc = document.getElementById('imageDesc');
