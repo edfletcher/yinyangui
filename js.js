@@ -139,6 +139,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
         startOverLink.innerText = 'Start Over';
         startOverLink.href = window.location.origin;
         [document.createElement('br'), document.createElement('br'), startOverLink]
-            .map(document.getElementById('header').appendChild);
+            .map((e) => document.getElementById('header').appendChild(e));
     }
 });
