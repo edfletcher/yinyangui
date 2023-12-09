@@ -164,6 +164,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
     const sklCont = document.getElementById("sklCont");
     const rmBut = document.createElement("a");
     rmBut.addEventListener("click", (e) => {
+      e.preventDefault();
       window.localStorage.removeItem("openaiKey");
       sklEle.checked = false;
       sklEle.disabled = false;
