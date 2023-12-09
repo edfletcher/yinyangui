@@ -69,12 +69,16 @@ async function loader(reqIdParam, _event) {
     try {
         resultBody = await result.json();
     } catch (e) {
-        console.error('bad json?');
-        console.error(e);
-        console.error(result);
-    }
-    const { requestId, sentences, results: { good, bad }, meta } = resultBody;
+        if (reqIdParam) {
+            return reqBottomHalf(reqIdParam);
+        }
 
+        console.error('Bad body', e);
+        return;
+    }
+
+    const { requestId, sentences, results: { good, bad }, meta } = resultBody;
+    console.log(requestId);
     const imageDesc = document.getElementById('imageDesc');
     sentences.forEach(({ sentence, sentiment: { good } }) => {
         const ele = document.createElement('span');
@@ -86,22 +90,19 @@ async function loader(reqIdParam, _event) {
     document.getElementById('badPrompt').innerText = bad.prompt;
     document.getElementById('metadata').innerText = `OpenAI tokens used: ${meta.openai_tokens_used}`;
 
-    if (!reqIdParam) {
-        window.location.search = `?req=${requestId}`;
-        return;
-    }
-
-    reqBottomHalf(requestId);
+    reqBottomHalf(requestId, reqIdParam ? resultBody : null);
 }
 
-async function reqBottomHalf(requestId) {
-    const result = await fetch(`https://${API_HOST}/${requestId}`);
-    if (result.status === 202) {
-        setTimeout(() => reqBottomHalf(requestId), 3000);
-        return;
-    }
+async function reqBottomHalf(requestId, resultBody) {
+    if (!resultBody) {
+        const result = await fetch(`https://${API_HOST}/${requestId}`);
+        if (result.status === 202) {
+            setTimeout(() => reqBottomHalf(requestId), 3000);
+            return;
+        }
 
-    const resultBody = await result.json();
+        resultBody = await result.json();
+    }
 
     document.title = document.title.replace('⏳', '');
     const { input: { url }, results: { good, bad } } = resultBody;
