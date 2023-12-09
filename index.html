@@ -4,12 +4,16 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
     <style type="text/css">
         @import url("https://fonts.googleapis.com/css?family=Zilla Slab:400,500,700");
 
         body {
             text-align: center;
-            background: rgb(100, 100, 100);
+            background: #555f6b;
             padding-left: 3vw;
             padding-right: 3vw;
             font-family: 'Zilla Slab';
@@ -95,13 +99,14 @@
 
 <body>
     <h3 style="margin: 5vh 0 5vh 0;">
-        <img src="https://avatars.githubusercontent.com/u/153049230?s=320&v=4" style="width: 100px; border-radius: 0.3em;" />
-        <br/>
-        Find the <br/>yin &amp; yang</span> <br/>of an image
+        <img src="https://avatars.githubusercontent.com/u/153049230?s=320&v=4"
+            style="width: 100px; border-radius: 0.3em;" />
+        <br />
+        Find the <br />yin &amp; yang</span> <br />of an image
     </h3>
 
-    <input id="yinyangUrl" type="text" value="" size="32" placeholder="Image URL..."/>
-    <br/>
+    <input id="yinyangUrl" type="text" value="" size="32" placeholder="Image URL..." />
+    <br />
     <div id="inputDiv">
         <div>
             <span style="font-size: 9pt; font-style: italic;">
@@ -118,7 +123,8 @@
             <br />
             <span style="font-size: 8pt; font-style: italic;">
                 never logged or stored server-side:
-                <a href="https://github.com/image-yinyang/public/blob/0b1627e3f931bb809b521537472802b2ffbf3ac0/src/index.js#L38-L49" target="_blank">see for
+                <a href="https://github.com/image-yinyang/public/blob/0b1627e3f931bb809b521537472802b2ffbf3ac0/src/index.js#L38-L49"
+                    target="_blank">see for
                     yourself.</a>
             </span>
         </div>
@@ -130,7 +136,7 @@
             <button id="yinyang" disabled="true">🖼️☯️</button>
             <div id="metadata"></div>
         </div>
-        <br/>
+        <br />
         <a id="yinyangUrlRO" href=""><img id="sourceImage" src="" /></a>
     </div>
 
@@ -175,31 +181,6 @@
     const API_HOST = 'api.yinyang.computerpho.be';
     const IMG_HOST = 'images.yinyang.computerpho.be';
 
-    document.addEventListener('DOMContentLoaded', (e) => {
-        if (window.localStorage.getItem('openaiKey')) {
-            const oaiKeyEle = document.getElementById('openaiKey');
-            oaiKeyEle.value = window.localStorage.getItem('openaiKey');
-            oaiKeyEle.disabled = true;
-            const sklEle = document.getElementById('storeKeyLocally');
-            sklEle.checked = true;
-            sklEle.disabled = true;
-            const sklCont = document.getElementById('sklCont');
-            const rmBut = document.createElement('a');
-            rmBut.addEventListener('click', (e) => {
-                window.localStorage.removeItem('openaiKey');
-                sklEle.checked = false;
-                sklEle.disabled = false;
-                oaiKeyEle.value = '';
-                oaiKeyEle.disabled = false;
-                rmBut.parentElement.removeChild(rmBut);
-            });
-            rmBut.innerText = 'Clear stored key.';
-            rmBut.href = '';
-            sklCont.appendChild(rmBut);
-            document.getElementById('yinyang').disabled = false;
-        }
-    });
-
     function onUrlChange(e) {
         document.getElementById('sourceImage').src = e.target.value;
     }
@@ -218,7 +199,7 @@
         document.getElementById('thresModLabel').innerText = MOD_LABELS[Number.parseInt(e.target.value) + Number.parseInt(e.target.max)];
     });
 
-    document.getElementById('yinyang').addEventListener('click', async () => {
+    async function loader(reqIdParam, _event) {
         document.getElementById('yinyang').parentElement.removeChild(document.getElementById('yinyang'));
         const urlEle = document.getElementById('yinyangUrl');
         urlEle.removeEventListener('change', onUrlChange)
@@ -238,6 +219,7 @@
 
         document.getElementById('sourceImage').src = imageUrl;
         document.title = '⏳  🖼️☯️';
+        const url = `https://${API_HOST}/${reqIdParam ?? ''}`
         const result = await fetch(`https://${API_HOST}/`, {
             method: 'POST',
             body: imageUrl,
@@ -265,7 +247,7 @@
         document.getElementById('reqId').innerText = `request ID: ${requestId}`;
 
         reqBottomHalf(requestId);
-    });
+    }
 
     async function reqBottomHalf(requestId) {
         const result = await fetch(`https://${API_HOST}/${requestId}`);
@@ -279,6 +261,40 @@
         document.getElementById('goodImage').src = `https://${IMG_HOST}/${good.imageBucketId}`;
         document.getElementById('badImage').src = `https://${IMG_HOST}/${bad.imageBucketId}`;
     }
+    
+    document.getElementById('yinyang').addEventListener('click', loader.bind(null, null));
+
+    document.addEventListener('DOMContentLoaded', (e) => {
+        if (window.localStorage.getItem('openaiKey')) {
+            const oaiKeyEle = document.getElementById('openaiKey');
+            oaiKeyEle.value = window.localStorage.getItem('openaiKey');
+            oaiKeyEle.disabled = true;
+            const sklEle = document.getElementById('storeKeyLocally');
+            sklEle.checked = true;
+            sklEle.disabled = true;
+            const sklCont = document.getElementById('sklCont');
+            const rmBut = document.createElement('a');
+            rmBut.addEventListener('click', (e) => {
+                window.localStorage.removeItem('openaiKey');
+                sklEle.checked = false;
+                sklEle.disabled = false;
+                oaiKeyEle.value = '';
+                oaiKeyEle.disabled = false;
+                rmBut.parentElement.removeChild(rmBut);
+            });
+            rmBut.innerText = 'Clear stored key.';
+            rmBut.href = '';
+            sklCont.appendChild(rmBut);
+            document.getElementById('yinyang').disabled = false;
+        }
+
+        const { searchParams } = new URL(window.location.href);
+        const reqParam = searchParams.get('req');
+
+        if (reqParam) {
+            loader(reqParam);
+        }
+    });
 </script>
 <script data-goatcounter="https://yinyang.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
