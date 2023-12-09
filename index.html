@@ -2,106 +2,26 @@
 <html>
 
 <head>
+    <title>Image Yinyang</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style type="text/css">
-        @import url("https://fonts.googleapis.com/css?family=Zilla Slab:400,500,700");
-
-        body {
-            text-align: center;
-            background: rgb(100, 100, 100);
-            padding-left: 3vw;
-            padding-right: 3vw;
-            font-family: 'Zilla Slab';
-        }
-
-        img {
-            width: 1024px;
-            border-radius: 0.2em;
-        }
-
-        a {
-            color: orange;
-        }
-
-        input,
-        button {
-            margin: 3px;
-            padding: 0.5em;
-            background: #111;
-            color: #eee;
-            border-radius: 0.4em;
-            border: 1px solid #eee;
-        }
-
-        a:visited {
-            color: rgb(198, 109, 0);
-        }
-
-        #badImage {
-            border: 5px solid black;
-            background: rgba(0, 0, 0, 0.5);
-        }
-
-        #goodImage {
-            border: 5px solid white;
-            background: rgba(255, 255, 255, 0.5);
-        }
-
-        #sourceDiv {
-            display: none;
-            visibility: hidden;
-            margin-top: 3vh;
-            margin-bottom: 3vh;
-        }
-
-        .footer {
-            margin-top: 12vh;
-            margin-bottom: 3vh;
-            margin-left: 4vw;
-            margin-right: 4vw;
-            padding-top: 1vh;
-            border-top: 2px dotted rgb(200, 200, 200);
-        }
-
-        #footer {
-            font-size: 75%;
-        }
-
-        #imageDesc span {
-            padding-right: 0.2em;
-        }
-
-        @media screen and (max-width: 1280px) {
-            img {
-                width: 768px;
-            }
-        }
-
-        @media screen and (max-width: 1024px) {
-            img {
-                width: 512px;
-            }
-        }
-
-        @media screen and (max-width: 640px) {
-            img {
-                width: 256px;
-            }
-        }
-    </style>
-    <title>🖼️☯️</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
-    <h3 style="margin: 5vh 0 5vh 0;">
-        <img src="https://avatars.githubusercontent.com/u/153049230?s=320&v=4" style="width: 100px; border-radius: 0.3em;" />
-        <br/>
-        Find the <br/>yin &amp; yang</span> <br/>of an image
+    <h3 style="margin: 5vh 0 5vh 0;" id="header">
+        <img src="https://avatars.githubusercontent.com/u/153049230?s=320&v=4"
+            style="width: 100px; border-radius: 0.3em;" />
+        <br />
+        Find the <br /><span class="yin">yin</span> &amp; <span class="yang">yang</span><br />of an image
     </h3>
 
-    <input id="yinyangUrl" type="text" value="" size="32" placeholder="Image URL..."/>
-    <br/>
+    <input id="yinyangUrl" type="text" value="" size="32" placeholder="Image URL..." />
+    <br />
     <div id="inputDiv">
         <div>
             <span style="font-size: 9pt; font-style: italic;">
@@ -118,7 +38,8 @@
             <br />
             <span style="font-size: 8pt; font-style: italic;">
                 never logged or stored server-side:
-                <a href="https://github.com/image-yinyang/public/blob/0b1627e3f931bb809b521537472802b2ffbf3ac0/src/index.js#L38-L49" target="_blank">see for
+                <a href="https://github.com/image-yinyang/public/blob/0b1627e3f931bb809b521537472802b2ffbf3ac0/src/index.js#L38-L49"
+                    target="_blank">see for
                     yourself.</a>
             </span>
         </div>
@@ -130,22 +51,22 @@
             <button id="yinyang" disabled="true">🖼️☯️</button>
             <div id="metadata"></div>
         </div>
-        <br/>
+        <br />
         <a id="yinyangUrlRO" href=""><img id="sourceImage" src="" /></a>
     </div>
 
     <div id="sourceDiv">
-        <div id="imageDesc"></div>
+        <div id="imageDesc" class="promptText"></div>
         <div class="footer"></div>
 
         <img id="badImage" class="yyImage"
             src="https://cdn.pixabay.com/animation/2022/07/29/03/42/03-42-11-849_512.gif" />
-        <div id="badPrompt"></div>
+        <div id="badPrompt" class="yin" class="promptText"></div>
         <div class="footer"></div>
 
         <img id="goodImage" class="yyImage"
             src="https://cdn.pixabay.com/animation/2022/07/29/03/42/03-42-11-849_512.gif" />
-        <div id="goodPrompt" style="color: white;"></div>
+        <div id="goodPrompt" class="yang" class="promptText"></div>
     </div>
 
     <div id="footer" class="footer">
@@ -158,128 +79,12 @@
         <a href="https://github.com/image-yinyang" target="_blank">an</a>
         <a href="https://github.com/edfletcher" target="_blank">ed fletcher</a> joint.
     </div>
-    <div id="reqId" style="font-size: 80%; color: #888888;"></div>
+    <div id="reqId" style="font-size: 80%; color: #888888; display: none;">
+        request ID: <a href="" id="reqIdLink"></a>
+    </div>
 </body>
 
-<script>
-    const MOD_LABELS = [
-        'negativest',
-        'negativer',
-        'negative',
-        'neutral',
-        'positive',
-        'positiver',
-        'positivest'
-    ];
-
-    const API_HOST = 'api.yinyang.computerpho.be';
-    const IMG_HOST = 'images.yinyang.computerpho.be';
-
-    document.addEventListener('DOMContentLoaded', (e) => {
-        if (window.localStorage.getItem('openaiKey')) {
-            const oaiKeyEle = document.getElementById('openaiKey');
-            oaiKeyEle.value = window.localStorage.getItem('openaiKey');
-            oaiKeyEle.disabled = true;
-            const sklEle = document.getElementById('storeKeyLocally');
-            sklEle.checked = true;
-            sklEle.disabled = true;
-            const sklCont = document.getElementById('sklCont');
-            const rmBut = document.createElement('a');
-            rmBut.addEventListener('click', (e) => {
-                window.localStorage.removeItem('openaiKey');
-                sklEle.checked = false;
-                sklEle.disabled = false;
-                oaiKeyEle.value = '';
-                oaiKeyEle.disabled = false;
-                rmBut.parentElement.removeChild(rmBut);
-            });
-            rmBut.innerText = 'Clear stored key.';
-            rmBut.href = '';
-            sklCont.appendChild(rmBut);
-            document.getElementById('yinyang').disabled = false;
-        }
-    });
-
-    function onUrlChange(e) {
-        document.getElementById('sourceImage').src = e.target.value;
-    }
-
-    document.getElementById('yinyangUrl').addEventListener('change', onUrlChange);
-
-    document.getElementById('yinyangUrl').addEventListener('focus', (e) => { e.target.select(); });
-
-    document.getElementById('openaiKey').addEventListener('change', (e) => {
-        if ((e.target.value.length === 51 && e.target.value.indexOf('sk-') === 0) || e.target.value.length === 64) {
-            document.getElementById('yinyang').disabled = false;
-        }
-    });
-
-    document.getElementById('thresMod').addEventListener('change', (e) => {
-        document.getElementById('thresModLabel').innerText = MOD_LABELS[Number.parseInt(e.target.value) + Number.parseInt(e.target.max)];
-    });
-
-    document.getElementById('yinyang').addEventListener('click', async () => {
-        document.getElementById('yinyang').parentElement.removeChild(document.getElementById('yinyang'));
-        const urlEle = document.getElementById('yinyangUrl');
-        urlEle.removeEventListener('change', onUrlChange)
-        const imageUrl = urlEle.value;
-        document.getElementById('yinyangUrlRO').href = imageUrl;
-        const sourceDiv = document.getElementById('sourceDiv');
-        sourceDiv.style.display = 'block';
-        sourceDiv.style.visibility = 'visible';
-        document.getElementById('thresMod').disabled = true;
-        const oaiKeyEle = document.getElementById('openaiKey');
-        const openaiKey = oaiKeyEle.value;
-        if (document.getElementById('storeKeyLocally').checked) {
-            window.localStorage.setItem('openaiKey', openaiKey);
-        }
-
-        oaiKeyEle.parentElement.parentElement.removeChild(oaiKeyEle.parentElement);
-
-        document.getElementById('sourceImage').src = imageUrl;
-        document.title = '⏳  🖼️☯️';
-        const result = await fetch(`https://${API_HOST}/`, {
-            method: 'POST',
-            body: imageUrl,
-            headers: {
-                'X-Yinyang-OpenAI-Key': openaiKey,
-                'X-Yinyang-Threshold-Mod': document.getElementById('thresMod').value,
-            }
-        });
-        if (result.status > 299) {
-            document.getElementById('metadata').innerText = `Request failed! Please try again soon`;
-            document.getElementById('goodImage').src = document.getElementById('badImage').src = '';
-            return;
-        }
-        const { requestId, response, sentences, results: { good, bad }, meta } = await result.json();
-        const imageDesc = document.getElementById('imageDesc');
-        sentences.forEach(({ sentence, sentiment: { good } }) => {
-            const ele = document.createElement('span');
-            ele.style.color = good ? 'white' : 'black';
-            ele.innerText = sentence + '.';
-            imageDesc.appendChild(ele);
-        });
-        document.getElementById('goodPrompt').innerText = good.prompt;
-        document.getElementById('badPrompt').innerText = bad.prompt;
-        document.getElementById('metadata').innerText = `OpenAI tokens used: ${meta.openai_tokens_used}`;
-        document.getElementById('reqId').innerText = `request ID: ${requestId}`;
-
-        reqBottomHalf(requestId);
-    });
-
-    async function reqBottomHalf(requestId) {
-        const result = await fetch(`https://${API_HOST}/${requestId}`);
-        if (result.status === 202) {
-            setTimeout(() => reqBottomHalf(requestId), 3000);
-            return;
-        }
-
-        document.title = '🖼️☯️';
-        const { results: { good, bad } } = await result.json();
-        document.getElementById('goodImage').src = `https://${IMG_HOST}/${good.imageBucketId}`;
-        document.getElementById('badImage').src = `https://${IMG_HOST}/${bad.imageBucketId}`;
-    }
-</script>
+<script src="/js.js"></script>
 <script data-goatcounter="https://yinyang.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
 </html>
