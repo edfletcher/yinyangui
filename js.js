@@ -95,12 +95,12 @@ async function reqBottomHalf(requestId, resultBody) {
         resultBody = await result.json();
     }
 
-    document.title.replace('⏳', '');
+    document.title = document.title.replace('⏳', '');
     const { input: { url }, results: { good, bad } } = resultBody;
     document.getElementById('goodImage').src = `https://${IMG_HOST}/${good.imageBucketId}`;
     document.getElementById('badImage').src = `https://${IMG_HOST}/${bad.imageBucketId}`;
     document.getElementById('yinyangUrl').value = url;
-    onUrlChange({ target: { value: url }});
+    onUrlChange({ target: { value: url } });
 }
 
 document.getElementById('yinyang').addEventListener('click', loader.bind(null, null));
@@ -134,5 +134,11 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
     if (reqParam) {
         loader(reqParam);
+
+        const startOverLink = document.createElement('a');
+        startOverLink.innerText = 'Start Over';
+        startOverLink.href = window.location.origin;
+        [document.createElement('br'), document.createElement('br'), startOverLink]
+            .map(document.getElementById('header').appendChild);
     }
 });
