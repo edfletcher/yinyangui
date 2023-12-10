@@ -148,7 +148,7 @@ async function reqBottomHalf(requestId, resultBody) {
   reqIdLink.innerText = requestId;
   reqIdLink.href = `${window.location.origin}/?req=${requestId}`;
 
-  if (window.location.pathname === '/') {
+  if (!window.location.search) {
     window.location.href = reqIdLink.href;
   }
 }
