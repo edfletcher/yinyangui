@@ -37,12 +37,14 @@ document.getElementById("thresMod").addEventListener("change", (e) => {
 
 function _updatePrompts(resultBody) {
   const {
-    requestId,
     sentences,
     results: { good, bad },
     meta,
   } = resultBody;
   const imageDesc = document.getElementById("imageDesc");
+  while (imageDesc.firstChild) {
+    imageDesc.removeChild(imageDesc.firstChild);
+  }
   sentences.forEach(({ sentence, sentiment: { good } }) => {
     const ele = document.createElement("span");
     ele.style.color = good ? "white" : "black";
