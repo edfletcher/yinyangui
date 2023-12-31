@@ -85,14 +85,14 @@ async function loader(reqIdParam, _event) {
     reqIdParam
       ? {}
       : {
-          method: "POST",
-          body: imageUrl,
-          headers: {
-            "X-Yinyang-OpenAI-Key": openaiKey,
-            "X-Yinyang-Threshold-Mod":
-              document.getElementById("thresMod").value,
-          },
+        method: "POST",
+        body: imageUrl,
+        headers: {
+          "X-Yinyang-OpenAI-Key": openaiKey,
+          "X-Yinyang-Threshold-Mod":
+            document.getElementById("thresMod").value,
         },
+      },
   );
 
   if (result.status > 299) {
@@ -148,9 +148,10 @@ async function reqBottomHalf(requestId, resultBody) {
   document.getElementById("reqId").style.display = "block";
   const reqIdLink = document.getElementById("reqIdLink");
   reqIdLink.innerText = requestId;
-  reqIdLink.href = `${window.location.origin}/?req=${requestId}`;
+  reqIdLink.href = `${window.location.origin}/?req=${requestId}&pl=${document.getElementById('yinyangUrl').value}`;
 
-  if (!window.location.search) {
+  const { searchParams } = new URL(window.location.href);
+  if (!searchParams.get("req")) {
     window.location.href = reqIdLink.href;
   }
 }
@@ -186,6 +187,11 @@ document.addEventListener("DOMContentLoaded", (e) => {
 
   const { searchParams } = new URL(window.location.href);
   const reqParam = searchParams.get("req");
+  const preloadUrlParam = searchParams.get("pl");
+
+  if (preloadUrlParam) {
+    document.getElementById('yinyangUrl').value = preloadUrlParam;
+  }
 
   if (reqParam) {
     loader(reqParam);
@@ -193,10 +199,10 @@ document.addEventListener("DOMContentLoaded", (e) => {
     const startOverLink = document.createElement("a");
     startOverLink.innerText = "Start Over";
     startOverLink.href = window.location.origin;
-    [
-      document.createElement("br"),
-      document.createElement("br"),
-      startOverLink,
-    ].map((e) => document.getElementById("header").appendChild(e));
+    if (preloadUrlParam) {
+      startOverLink.href += `?pl=${preloadUrlParam}`;
+    }
+
+    document.getElementById("inputDiv").appendChild(startOverLink);
   }
 });
