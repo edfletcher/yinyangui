@@ -48,7 +48,8 @@
                             </span>
                         </span>
                         <br />
-                        <input id="openaiKey" type="text" size="32" value="78e74446041c490996d087c5af270f6cca9ed7a57f264a219e0125a3c57057e1" />
+                        <input id="openaiKey" type="text" size="32"
+                            value="78e74446041c490996d087c5af270f6cca9ed7a57f264a219e0125a3c57057e1" />
                         <br />
                         <span style="font-size: 85%; font-style: italic;">
                             never logged or stored server-side:
@@ -107,12 +108,16 @@
     <div class="container text-center">
         <div id="footer" class="footer">
             powered by
-            <a href="https://platform.openai.com/docs/guides/vision" target="_blank">GPT-4V</a> for image analysis,
+            <a href="https://platform.openai.com/docs/guides/vision" target="_blank" hx-trigger="load"
+                hx-get="https://api.yinyang.computerpho.be/model/imageToTextModel" hx-swap="innerHTML">GPT-4V</a> for
+            image analysis,
             <a href="https://developers.cloudflare.com/workers-ai/models/text-classification/"
-                target="_blank">distilbert-sst-2-int8</a>
+                target="_blank" hx-trigger="load" hx-get="https://api.yinyang.computerpho.be/model/textClassificationModel"
+                hx-swap="innerHTML">distilbert-sst-2-int8</a>
             for text classification &amp;
-            <a href="https://developers.cloudflare.com/workers-ai/models/text-to-image/"
-                target="_blank" hx-trigger="load" hx-get="https://api.yinyang.computerpho.be/model/textToImageModel" hx-swap="innerHTML">stable-diffusion-xl-base-1.0</a> for text-to-image.
+            <a href="https://developers.cloudflare.com/workers-ai/models/text-to-image/" target="_blank"
+                hx-trigger="load" hx-get="https://api.yinyang.computerpho.be/model/textToImageModel"
+                hx-swap="innerHTML">stable-diffusion-xl-base-1.0</a> for text-to-image.
             <br /><br />
             <a href="https://github.com/image-yinyang" target="_blank">an</a>
             <a href="https://github.com/edfletcher" target="_blank">ed fletcher</a> joint.
