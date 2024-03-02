@@ -15,26 +15,6 @@ function onUrlChange(e) {
   document.getElementById("sourceImage").src = e.target.value;
 }
 
-document.getElementById("yinyangUrl").addEventListener("change", onUrlChange);
-
-document.getElementById("yinyangUrl").addEventListener("focus", (e) => {
-  e.target.select();
-});
-
-document.getElementById("openaiKey").addEventListener("change", (e) => {
-  if (
-    (e.target.value.length === 51 && e.target.value.indexOf("sk-") === 0) ||
-    e.target.value.length === 64
-  ) {
-    document.getElementById("yinyang").disabled = false;
-  }
-});
-
-document.getElementById("thresMod").addEventListener("change", (e) => {
-  document.getElementById("thresModLabel").innerText =
-    MOD_LABELS[Number.parseInt(e.target.value) + Number.parseInt(e.target.max)];
-});
-
 function _updatePrompts(resultBody) {
   const {
     sentences,
@@ -156,11 +136,31 @@ async function reqBottomHalf(requestId, resultBody) {
   }
 }
 
-document
-  .getElementById("yinyang")
-  .addEventListener("click", loader.bind(null, null));
-
 document.addEventListener("DOMContentLoaded", (e) => {
+  document.getElementById("yinyangUrl").addEventListener("change", onUrlChange);
+  
+  document.getElementById("yinyangUrl").addEventListener("focus", (e) => {
+    e.target.select();
+  });
+  
+  document.getElementById("openaiKey").addEventListener("change", (e) => {
+    if (
+      (e.target.value.length === 51 && e.target.value.indexOf("sk-") === 0) ||
+      e.target.value.length === 64
+    ) {
+      document.getElementById("yinyang").disabled = false;
+    }
+  });
+
+  document.getElementById("thresMod").addEventListener("change", (e) => {
+    document.getElementById("thresModLabel").innerText =
+      MOD_LABELS[Number.parseInt(e.target.value) + Number.parseInt(e.target.max)];
+  });
+
+  document
+    .getElementById("yinyang")
+    .addEventListener("click", loader.bind(null, null));
+
   if (window.localStorage.getItem("openaiKey")) {
     const oaiKeyEle = document.getElementById("openaiKey");
     oaiKeyEle.value = window.localStorage.getItem("openaiKey");
