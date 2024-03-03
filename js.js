@@ -105,7 +105,7 @@ async function reqBottomHalf(requestId, resultBody) {
   if (!resultBody) {
     const result = await fetch(`https://${API_HOST}/${requestId}`);
     if (result.status === 202) {
-      setTimeout(() => reqBottomHalf(requestId), 3000);
+      setTimeout(() => reqBottomHalf(requestId), 1337);
       return;
     }
 
