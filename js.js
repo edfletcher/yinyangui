@@ -118,10 +118,15 @@ async function reqBottomHalf(requestId, resultBody) {
     results: { good, bad },
   } = resultBody;
   _updatePrompts(resultBody);
-  document.getElementById("goodImage").src =
-    `https://${IMG_HOST}/${good.imageBucketId}`;
-  document.getElementById("badImage").src =
-    `https://${IMG_HOST}/${bad.imageBucketId}`;
+
+  const goodImage = document.getElementById("goodImage");
+  const badImage = document.getElementById("badImage");
+  goodImage.title = badImage.title = 'Click to start again with this image as the input';
+  const goodImageUrl = goodImage.src = `https://${IMG_HOST}/${good.imageBucketId}`;
+  const badImageUrl = badImage.src = `https://${IMG_HOST}/${bad.imageBucketId}`;
+  document.getElementById("goodImageLink").href = `/?pl=${goodImageUrl}`;
+  document.getElementById("badImageLink").href = `/?pl=${badImageUrl}`;
+
   document.getElementById("yinyangUrl").value = url;
   onUrlChange({ target: { value: url } });
 
@@ -138,11 +143,11 @@ async function reqBottomHalf(requestId, resultBody) {
 
 document.addEventListener("DOMContentLoaded", (e) => {
   document.getElementById("yinyangUrl").addEventListener("change", onUrlChange);
-  
+
   document.getElementById("yinyangUrl").addEventListener("focus", (e) => {
     e.target.select();
   });
-  
+
   document.getElementById("openaiKey").addEventListener("change", (e) => {
     if (
       (e.target.value.length === 51 && e.target.value.indexOf("sk-") === 0) ||
