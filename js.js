@@ -8,6 +8,7 @@ const MOD_LABELS = [
   "positivest",
 ];
 
+const ROOT_HOST = "yinyang.computerpho.be";
 const API_HOST = "api.yinyang.computerpho.be";
 const IMG_HOST = "images.yinyang.computerpho.be";
 
@@ -118,10 +119,12 @@ async function reqBottomHalf(requestId, resultBody) {
     results: { good, bad },
   } = resultBody;
   _updatePrompts(resultBody);
-  document.getElementById("goodImage").src =
+  const goodImageUrl = document.getElementById("goodImage").src =
     `https://${IMG_HOST}/${good.imageBucketId}`;
-  document.getElementById("badImage").src =
+  document.getElementById("goodImageLink").href = `https://${ROOT_HOST}/?pl=${goodImageUrl}`;
+  const badImageUrl = document.getElementById("badImage").src =
     `https://${IMG_HOST}/${bad.imageBucketId}`;
+  document.getElementById("badImageLink").href = `https://${ROOT_HOST}/?pl=${badImageUrl}`;
   document.getElementById("yinyangUrl").value = url;
   onUrlChange({ target: { value: url } });
 
